@@ -11,4 +11,16 @@ func main() {
 		}
 	}
 	fmt.Println(sum)
+
+	// указатели
+	fmt.Println("\nУказатели")
+	var i, j int
+	pi := &i
+	pj := &j
+	*pi = 7
+	*pj = *pi
+	*pj += 3
+	px := pi
+	*px = 5
+	fmt.Println(i, j, px)
 }
