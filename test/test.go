@@ -1,43 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
+
+func mainHandle(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("Получен запрос")
+	// curTime := time.Now().Format("02.01.2026 15:04:05")
+	// res.Write([]byte(curTime))
+
+	// s := fmt.Sprintf("Host: %s\nPath: %s\nMethod: %s", req.Host, req.URL.Path, req.Method)
+	// res.Write([]byte(s))
+
+	s := fmt.Sprintf("%s/%s", req.Host, req.URL.Path)
+	res.Write([]byte(s))
+}
 
 func main() {
-	nums := []int{2, 4, 6, 8, 10}
-	sum := 0
-	for i, v := range nums {
-		if i%2 == 0 {
-			sum += v
-		}
+	fmt.Println("Запускаем сервер")
+	http.HandleFunc(`/`, mainHandle)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic(err)
 	}
-	fmt.Println(sum)
-
-	// указатели
-	fmt.Println("\nУказатели")
-	var i, j int
-	pi := &i
-	pj := &j
-	*pi = 7
-	*pj = *pi
-	*pj += 3
-	px := pi
-	*px = 5
-	fmt.Println(i, j, px)
-
-	// работа с указателями (заполнить массив указателями, изменить значения используя указатели)
-	// исходный массив
-	numbers := [...]int{1, 3, 8, 19, 42}
-
-	// 1. Создайте и заполните слайс указателей на элементы массива
-	// 2. Пройдитесь по слайсу и умножьте на три все значения, на которые
-	//    ссылаются указатели
-	ptrs := make([]*int, len(numbers))
-	for i := range numbers {
-		ptrs[i] = &numbers[i]
-	}
-	for i := range ptrs {
-		*ptrs[i] *= 3
-	}
-
-	fmt.Println(numbers)
+	fmt.Println("Завершаем работу")
 }
