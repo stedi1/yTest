@@ -10,7 +10,7 @@ func mainHandle(res http.ResponseWriter, req *http.Request) {
 	var out string
 
 	if req.URL.Path == `/time` || req.URL.Path == `/time/` {
-		out = time.Now().Format("02.01.2025 15:04:05")
+		out = time.Now().Format("02.01.2006 15:04:05")
 	} else {
 		out = fmt.Sprintf("Host: %s\nPath: %s\nMethod: %s",
 			req.Host, req.URL.Path, req.Method)
