@@ -33,10 +33,10 @@ var artists = map[string]Artist{
 // JSONHandler принимает значение из параметра band, ищет по нему в мапе группу, конвертирует
 // данные из переменной band в JSON и выводит их в браузере.
 func JSONHandler(w http.ResponseWriter, r *http.Request) {
-	var band string
+	// var band string
 
 	// берем название группы из параметра `band`
-	band = r.URL.Query().Get("band")
+	band := r.URL.Query().Get("band")
 
 	// проверяем POST-запрос или нет
 	if r.Method == http.MethodPost {
