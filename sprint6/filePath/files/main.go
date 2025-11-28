@@ -23,31 +23,35 @@ func FileInfo(path string) {
 	fmt.Println("Время:", fileInfo.ModTime().Format("02.01.06 15:04:05"))
 }
 
-func DirInfo(path, shift string) error {
+func DirInfo(path, shift string) (int64, error) {
+	var size int64
 	// получаем список файлов и поддиректорий
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return err
+		return 0, err
 	}
+
 	for _, file := range files {
 		fi, err := file.Info()
 		if err != nil {
-			return err
+			return 0, err
 		}
 		if file.IsDir() {
 			fmt.Printf("%s%s\n", shift, file.Name())
 			// заходим внутрь директории
-			err = DirInfo(filepath.Join(path, file.Name()), shift+"  ")
+			newSize, err := DirInfo(filepath.Join(path, file.Name()), shift+"  ")
 			if err != nil {
-				return err
+				return 0, err
 			}
+			size += newSize
 			continue
 		}
 		// выводим информацию о файле
 		fmt.Printf("%s%s %s %d\n", shift, file.Name(),
 			fi.ModTime().Format("02.01.06 15:04:05"), fi.Size())
+		size += fi.Size()
 	}
-	return nil
+	return size, nil
 }
 
 func main() {
@@ -65,7 +69,9 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("Директория:", curDir)
-	if err = DirInfo(curDir, ""); err != nil {
+	size, err := DirInfo(curDir, "")
+	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(size)
 }
