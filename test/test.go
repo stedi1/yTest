@@ -2,27 +2,22 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"time"
 )
 
-func mainHandle(res http.ResponseWriter, req *http.Request) {
-	fmt.Println("Получен запрос")
-	// curTime := time.Now().Format("02.01.2026 15:04:05")
-	// res.Write([]byte(curTime))
-
-	// s := fmt.Sprintf("Host: %s\nPath: %s\nMethod: %s", req.Host, req.URL.Path, req.Method)
-	// res.Write([]byte(s))
-
-	s := fmt.Sprintf("%s/%s", req.Host, req.URL.Path)
-	res.Write([]byte(s))
-}
-
 func main() {
-	fmt.Println("Запускаем сервер")
-	http.HandleFunc(`/`, mainHandle)
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err)
+	ticker := time.NewTicker(500 * time.Millisecond)
+	timer := time.NewTimer(5 * time.Second)
+
+	var count int
+	for {
+		select {
+		case <-ticker.C:
+			count++
+			fmt.Print(count, " ")
+		case <-timer.C:
+			fmt.Println("Расчёт закончен")
+			return
+		}
 	}
-	fmt.Println("Завершаем работу")
 }
