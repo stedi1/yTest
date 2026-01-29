@@ -12,15 +12,18 @@ type Cache struct {
 }
 
 func (cache *Cache) Get(i int) int {
-	cache.mu.Lock()
-	defer cache.mu.Unlock()
+	cache.mu.RLock()
 	v, ok := cache.m[i]
+	cache.mu.RUnlock()
 	if ok {
 		return v
 	}
+
 	// получаем значение для указанного ключа
+	cache.mu.Lock()
 	v = 2 * i
 	cache.m[i] = v
+	cache.mu.Unlock()
 	return v
 }
 
